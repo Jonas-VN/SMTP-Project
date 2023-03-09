@@ -19,6 +19,8 @@ class SMTPServer:
             ehlo_response = self.session.ehlo()
             if b"STARTTLS" in ehlo_response[1]:
                 self.session.starttls()
+            
+            self.session.set_debuglevel(1)
 
             self.session.login(username, password)
             print(f"\nSuccessfully logged into {username}!")
