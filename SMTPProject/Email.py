@@ -14,7 +14,7 @@ class Email:
     def set_receiver(self, email: str) -> None:
         self.msg["To"] = email
 
-    def set_multiple_receivers(self, emails: list[str]) -> None:
+    def set_multiple_receivers(self, emails: "list[str]") -> None:
         self.msg["To"] = ', '.join(emails)
 
     def set_subject(self, subject: str) -> None:
@@ -23,13 +23,13 @@ class Email:
     def set_cc(self, email: str) -> None:
         self.msg["Cc"] = email
 
-    def set_multiple_cc(self, emails: list[str]) -> None:
+    def set_multiple_cc(self, emails: "list[str]") -> None:
         self.msg["Cc"] = ', '.join(emails)
 
     def set_bcc(self, email: str) -> None:
         self.msg["Bcc"] = email
 
-    def set_multiple_bcc(self, emails: list[str]) -> None:
+    def set_multiple_bcc(self, emails: "list[str]") -> None:
         self.msg["Bcc"] = ', '.join(emails)
 
     def set_body(self, body: str) -> None:
@@ -43,7 +43,7 @@ class Email:
             part.add_header("Content-Disposition", f"attachment; filename= {filename}")
             self.msg.attach(part)
 
-    def add_multiple_attachments(self, filenames: list[str]) -> None:
+    def add_multiple_attachments(self, filenames: "list[str]") -> None:
         for filename in filenames:
             self.add_attachment(filename)
 
@@ -53,6 +53,6 @@ class Email:
             image = MIMEImage(img_data, name=filename)
             self.msg.attach(image)
 
-    def add_multiple_images(self, filenames: list[str]) -> None:
+    def add_multiple_images(self, filenames: "list[str]") -> None:
         for filename in filenames:
             self.add_image(filename)

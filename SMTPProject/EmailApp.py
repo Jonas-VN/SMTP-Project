@@ -80,5 +80,14 @@ class EmailApp(tk.Frame):
                 email.add_attachment(attachment)
 
         self.server.send_email(email)
-
         self.server.log_out()
+        self.reset_fields()
+
+    def reset_fields(self):
+        self.receiver_entry.delete(0, tk.END)
+        self.cc_entry.delete(0, tk.END)
+        self.bcc_entry.delete(0, tk.END)
+        self.subject_entry.delete(0, tk.END)
+        self.body_entry.delete("1.0", tk.END)
+        self.attachments_entry.delete(0, tk.END)
+
