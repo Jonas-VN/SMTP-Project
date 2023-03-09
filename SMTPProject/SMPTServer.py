@@ -3,7 +3,7 @@ from .Email import Email
 
 class SMTPServer:
     def __init__(self, debug = False) -> None:
-        self.debug = debug
+        self.is_debug_on = debug
         self.port = 587
         self.session = None
         self.SMTPServers = {
@@ -13,62 +13,66 @@ class SMTPServer:
             "outlook.com": "smtp-mail.outlook.com",
         }
 
+    def debug(self, text: str) -> None:
+        if self.is_debug_on:
+            print(f"\n{text}\n")
+
     def log_in(self, username: str, password: str) -> bool:
-        if self.debug:
-            print("\nLogin started!\n")
+        self.debug("Login started!")
         if not self.session and username.split("@")[1] in self.SMTPServers:
-            self.session = smtplib.SMTP(self.SMTPServers.get(username.split("@")[1]), self.port)
-            if self.debug: 
+            server = self.SMTPServers.get(username.split("@")[1])
+            self.session = smtplib.SMTP(server, self.port)
+
+            if self.is_debug_on: 
                 self.session.set_debuglevel(1)
 
-            if self.debug:
-                print("\nTesting server start!\n")
+            self.debug("Testing server start!")
             ehlo_response = self.session.ehlo()
             if b"STARTTLS" in ehlo_response[1]:
-                if self.debug:
-                    print("\nTLS is available!\n")
+                self.debug("TLS is available!")
                 self.session.starttls()
-            if self.debug:
-                print("\nTesting server end!\n")
+            self.debug("Testing server end!")
             
             self.session.login(username, password)
-            if self.debug:
-                print(f"\nSuccessfully logged into {username}!\n")
+            self.debug(f"Successfully logged into {username}!")
             return True
+        
         elif self.session: 
             raise ConnectionError("Close your previous session first before starting a new one!")
+        
         elif username.split("@")[1] not in self.SMTPServers:
             raise ValueError("This email isn't supported unfortunately!")
 
     def log_out(self) -> bool:
-        if self.debug:
-            print("\nLog out start!\n")
+        self.debug("Log out start!")
+
         if self.session:
             self.session.quit()
             self.session = None
-            if (self.debug):
-                print(f"\nSuccessfully logged out!\n")
+            self.debug(f"Successfully logged out!")
             return True
+        
         else:
             raise ConnectionError("Unable to log out, you weren't logged in!")
 
     def send_email(self, email: Email) -> bool:
-        if self.debug:
-            print("\nSend email start!\n")
+        self.debug("Send email start!")
+
         if not email.msg["From"]:
+            self.log_out()
             raise ValueError("You must set a sender email")
+        
         if not email.msg["To"]:
+            self.log_out()
             raise ValueError("You must set a receiver email")
-        if self.debug:
-            print("\nTesting if connection is available!\n")
+        
+        self.debug("Testing if connection is available!")
         if self.session.noop()[0] != 250:
             raise ConnectionError("Server is offline")
-        if self.debug:
-            print("\nConnection is still available!\n")
+        self.debug("Connection is still available!")
 
         self.session.send_message(email.msg)
-        if self.debug:
-            print(f'\nSent an email from {email.msg["From"]} to {email.msg["To"]}\n')
+        self.debug(f'Sent an email from {email.msg["From"]} to {email.msg["To"]}')
         return True
 
 
