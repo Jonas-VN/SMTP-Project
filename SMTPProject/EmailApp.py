@@ -4,12 +4,12 @@ import tkinter as tk
 from tkinter import filedialog
 
 class EmailApp(tk.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master = None, debug = False):
         super().__init__(master)
         self.master = master
         self.master.title("Email App")
         self.master.geometry("500x425")
-        self.server = SMTPServer()
+        self.server = SMTPServer(debug = debug)
 
         self.sender_label = tk.Label(self.master, text="From:")
         self.sender_label.grid(row=0, column=0, padx=5, pady=5, sticky="W")
@@ -82,6 +82,14 @@ class EmailApp(tk.Frame):
         self.server.send_email(email)
         self.server.log_out()
         self.reset_fields()
+
+        popup = tk.Toplevel(self.master)
+        popup.title("Email Sent")
+        popup.geometry("200x100")
+        message_label = tk.Label(popup, text="Email sent successfully!")
+        message_label.pack(pady=20)
+        ok_button = tk.Button(popup, text="OK", command=popup.destroy)
+        ok_button.pack()
 
     def reset_fields(self):
         self.receiver_entry.delete(0, tk.END)
