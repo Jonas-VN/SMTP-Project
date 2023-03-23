@@ -4,8 +4,11 @@ from .Email import Email
 class SMTPServer:
     def __init__(self, debug = False) -> None:
         self.is_debug_on = debug
-        self.port = 587
         self.session = None
+        self.ports = {
+            "STARTTLS": 587,
+            "SSL": 465
+        }
         self.SMTPServers = {
             "gmail.com": "smtp.gmail.com",
             "hotmail.com": "smtp.office365.com",
@@ -21,7 +24,8 @@ class SMTPServer:
         self.debug("Login started!")
         if not self.session and username.split("@")[1] in self.SMTPServers:
             server = self.SMTPServers.get(username.split("@")[1])
-            self.session = smtplib.SMTP(server, self.port)
+            self.session = smtplib.SMTP_SSL(server, self.ports.get("SSL"))
+            # self.session = smtplib.SMTP(server, self.ports.get("STARTTLS"))
 
             if self.is_debug_on: 
                 self.session.set_debuglevel(1)
