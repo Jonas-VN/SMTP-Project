@@ -4,12 +4,12 @@ import tkinter as tk
 from tkinter import filedialog
 
 class EmailApp(tk.Frame):
-    def __init__(self, master = None, debug = False):
+    def __init__(self, master = None, ssl_encryption = True, debug = False):
         super().__init__(master)
         self.master = master
         self.master.title("Email App")
         self.master.geometry("500x425")
-        self.server = SMTPServer(debug = debug)
+        self.server = SMTPServer(ssl_encryption = ssl_encryption, debug = debug)
 
         # From/Sender
         self.sender_label = tk.Label(self.master, text="From:")
