@@ -23,9 +23,10 @@ class SMTPServer:
         if self.session: 
             raise ConnectionError("Close your previous session first before starting a new one!")
         
-        if username.split("@")[1] in self.SMTPServers:
-            server = self.SMTPServers.get(username.split("@")[1])
-            if self.ssl_encryption and username.split("@")[1] == "gmail.com": # SSL doesn't work with hotmail?
+        email_provider = username.split("@")[1]
+        if email_provider in self.SMTPServers:
+            server = self.SMTPServers.get(email_provider)
+            if self.ssl_encryption and email_provider == "gmail.com": # SSL doesn't work with hotmail? So only when using gmail...
                 self.session = smtplib.SMTP_SSL(server, 465)
                 if self.is_debug_on: self.session.set_debuglevel(1)
             else:
