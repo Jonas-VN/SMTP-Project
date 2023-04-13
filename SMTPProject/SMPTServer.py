@@ -6,12 +6,6 @@ class SMTPServer:
         self.ssl_encryption = ssl_encryption
         self.is_debug_on = debug
         self.session = None
-        self.SMTPServers = {
-            "gmail.com": "smtp.gmail.com",
-            "hotmail.com": "smtp.office365.com",
-            "telenet.be": "smtp.telenet.be",
-            "outlook.com": "smtp-mail.outlook.com",
-        }
 
     def debug(self, text: str):
         if self.is_debug_on:
@@ -24,8 +18,8 @@ class SMTPServer:
             raise ConnectionError("Close your previous session first before starting a new one!")
         
         email_provider = username.split("@")[1]
-        if email_provider in self.SMTPServers:
-            server = self.SMTPServers.get(email_provider)
+        if email_provider in SMTP_SERVERS:
+            server = SMTP_SERVERS.get(email_provider)
             if self.ssl_encryption and email_provider == "gmail.com": # SSL doesn't work with hotmail? So only when using gmail...
                 self.session = smtplib.SMTP_SSL(server, 465)
                 if self.is_debug_on: self.session.set_debuglevel(1)
@@ -63,3 +57,37 @@ class SMTPServer:
         self.debug("Connection is still available!")
         self.session.send_message(email.msg)
         self.debug(f'Sent an email from {email.msg["From"]} to {email.msg["To"]}')
+
+
+SMTP_SERVERS = {
+    'gmail.com': 'smtp.gmail.com',
+    'yahoo.com': 'smtp.mail.yahoo.com',
+    'outlook.com': 'smtp.office365.com',
+    'hotmail.com': 'smtp.office365.com',
+    'live.com': 'smtp.office365.com',
+    'aol.com': 'smtp.aol.com',
+    'icloud.com': 'smtp.mail.me.com',
+    'mail.com': 'smtp.mail.com',
+    'zoho.com': 'smtp.zoho.com',
+    'protonmail.com': 'smtp.protonmail.com',
+    'fastmail.com': 'smtp.fastmail.com',
+    'yandex.com': 'smtp.yandex.com',
+    'gmx.com': 'mail.gmx.com',
+    'tutanota.com': 'mail.tutanota.com',
+    'startmail.com': 'mail.startmail.com',
+    'mail.ru': 'smtp.mail.ru',
+    'cox.net': 'smtp.cox.net',
+    'att.net': 'smtp.att.yahoo.com',
+    'verizon.net': 'smtp.verizon.net',
+    'comcast.net': 'smtp.comcast.net',
+    'charter.net': 'smtp.charter.net',
+    'roadrunner.com': 'smtp-server.rr.com',
+    'bellsouth.net': 'smtp.att.yahoo.com',
+    'sbcglobal.net': 'smtp.att.yahoo.com',
+    'earthlink.net': 'smtpauth.earthlink.net',
+    'juno.com': 'smtp.juno.com',
+    'netzero.net': 'smtp.netzero.net',
+    'aim.com': 'smtp.aim.com',
+    'rocketmail.com': 'smtp.mail.yahoo.com',
+    'me.com': 'smtp.mail.me.com'
+}
