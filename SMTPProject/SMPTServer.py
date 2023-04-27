@@ -64,6 +64,7 @@ SMTP_SERVERS = {
     'yahoo.com': 'smtp.mail.yahoo.com',
     'outlook.com': 'smtp.office365.com',
     'hotmail.com': 'smtp.office365.com',
+    'telenet.be': 'smtp.telenet.be',
     'live.com': 'smtp.office365.com',
     'aol.com': 'smtp.aol.com',
     'icloud.com': 'smtp.mail.me.com',
